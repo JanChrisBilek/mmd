@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'note.ui'
+# Form implementation generated from reading ui file 'data/img/note.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -9,9 +9,25 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+import sqlite3
+import os.path
+from pathlib import Path
 
 class Ui_MainWindow(object):
+    def __init__(self):
+        self.script_path = os.getcwd() + "/mmd/"
+        self.tableIndex = 0
+
+    def getTableIndex(self):
+        return self.tableIndex
+
+    def setTableIndex(self, index):
+        self.tableIndex = index
+        return self
+
+    def getScriptPath(self):
+        return self.script_path
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(891, 703)
@@ -37,11 +53,12 @@ class Ui_MainWindow(object):
         self.historyComboBox.setObjectName("historyComboBox")
         self.historyComboBox.addItem("")
         self.refreshHistoryButton = QtWidgets.QPushButton(self.centralwidget)
-        self.refreshHistoryButton.setGeometry(QtCore.QRect(450, 30, 21, 21))
-        self.refreshHistoryButton.setStyleSheet("background-color: rgb(165, 12, 70);")
-        self.refreshHistoryButton.setText("")
+        self.refreshHistoryButton.setGeometry(QtCore.QRect(450, 30, 211, 21))
+        self.refreshHistoryButton.setStyleSheet("background-color: rgb(165, 12, 70);\n"
+"color: rgb(238, 238, 236);\n"
+"font-weight: 800")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("data/img/refresh.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(f"{self.getScriptPath()}data/img/refresh.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.refreshHistoryButton.setIcon(icon)
         self.refreshHistoryButton.setObjectName("refreshHistoryButton")
         self.secondLabel = QtWidgets.QLabel(self.centralwidget)
@@ -60,7 +77,7 @@ class Ui_MainWindow(object):
 "color: rgb(238, 238, 236);\n"
 "font-weight: 800")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("data/img/plus.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(f"{self.getScriptPath()}data/img/plus.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.newRecordButton.setIcon(icon1)
         self.newRecordButton.setObjectName("newRecordButton")
         self.saveRecordButton = QtWidgets.QPushButton(self.centralwidget)
@@ -69,7 +86,7 @@ class Ui_MainWindow(object):
 "color: rgb(238, 238, 236);\n"
 "font-weight: 800")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("data/img/save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(f"{self.getScriptPath()}data/img/save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.saveRecordButton.setIcon(icon2)
         self.saveRecordButton.setObjectName("saveRecordButton")
         self.deleteRecordButton = QtWidgets.QPushButton(self.centralwidget)
@@ -78,7 +95,7 @@ class Ui_MainWindow(object):
 "color: rgb(238, 238, 236);\n"
 "font-weight: 800")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("data/img/delete.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(f"{self.getScriptPath()}data/img/delete.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.deleteRecordButton.setIcon(icon3)
         self.deleteRecordButton.setObjectName("deleteRecordButton")
         self.thirdLabel = QtWidgets.QLabel(self.centralwidget)
@@ -87,7 +104,7 @@ class Ui_MainWindow(object):
 "font-weight: 800")
         self.thirdLabel.setObjectName("thirdLabel")
         self.recordText = QtWidgets.QTextEdit(self.centralwidget)
-        self.recordText.setGeometry(QtCore.QRect(6, 143, 881, 531))
+        self.recordText.setGeometry(QtCore.QRect(6, 173, 881, 501))
         font = QtGui.QFont()
         font.setFamily("Ubuntu Condensed")
         font.setPointSize(13)
@@ -109,6 +126,26 @@ class Ui_MainWindow(object):
         icon4.addPixmap(QtGui.QPixmap("data/img/edit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.editRecordButton.setIcon(icon4)
         self.editRecordButton.setObjectName("editRecordButton")
+        self.fourthLabel = QtWidgets.QLabel(self.centralwidget)
+        self.fourthLabel.setGeometry(QtCore.QRect(-7, 146, 141, 20))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.fourthLabel.setFont(font)
+        self.fourthLabel.setStyleSheet("color: rgb(238, 238, 236);\n"
+"background-color: rgb(117, 80, 123);")
+        self.fourthLabel.setObjectName("fourthLabel")
+        self.recordName = QtWidgets.QLineEdit(self.centralwidget)
+        self.recordName.setGeometry(QtCore.QRect(140, 146, 711, 20))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(99)
+        self.recordName.setFont(font)
+        self.recordName.setToolTip("")
+        self.recordName.setStyleSheet("color: rgb(238, 238, 236);\n"
+"font-weight: 800")
+        self.recordName.setObjectName("recordName")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -137,6 +174,88 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        # Hide not required items
+        self.startupHideAction()
+
+        # Check if DB records exist and is valid
+        self.db_check()
+
+        # load items to ComboBox
+        self.initialComboBoxLoad()
+
+        self.historyComboBox.activated.connect(self.do_something)
+
+    def do_something(self):
+        print(self.historyComboBox.currentText())
+
+
+    def initialComboBoxLoad(self):
+        db = self.db_connect()
+        cursor = db.cursor()
+        records = cursor.execute("SELECT * FROM note ORDER BY date ASC")
+        # check if DB is not empty
+        if records.fetchone() is not None:
+            # temp = str(records.fetchall())
+            # print(temp)
+            # self.historyComboBox.addItem(temp)
+            records_data = records.fetchall()
+            for one_record in records_data:
+                id = one_record[0]
+                date = one_record[1]
+                name = one_record[2]
+                # record = one_record[3]
+                comboxitem = f"[{date}] {name} || {id}"
+                self.historyComboBox.addItem(comboxitem)
+
+    def db_connect(self):
+        connection = sqlite3.connect(f"{self.getScriptPath()}data/db/note.db")
+        return connection
+
+    def db_disconnect(self, connection):
+        connection.close()
+        return self
+
+    def db_check(self):
+        path = Path(f"{self.getScriptPath()}data/db/note.db")
+        if not path.is_file():
+            self.createNewDB()
+        else:
+            self.isDBfilevalid()
+
+    def isDBfilevalid(self):
+        test_connection = self.db_connect()
+        test_cursor = test_connection.cursor()
+        try:
+            test_cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='{note}';")
+        # file is not DB file -> delete file -> create new valid DB file
+        except sqlite3.DatabaseError:
+            os.remove(f"{self.getScriptPath()}data/db/note.db")
+            self.createNewDB()
+
+    def createNewDB(self):
+        connection = self.db_connect()
+        # https://docs.python.org/3/library/sqlite3.html
+        # In order to execute SQL statements and fetch results from SQL queries, we will need to use a database cursor.
+        cursor = connection.cursor()
+        cursor.execute("CREATE TABLE note "
+                       "(id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                       "date text NOT NULL, "
+                       "name text NOT NULL, "
+                       "record text NOT NULL);")
+        # null row - ignored by fetchall() method
+        cursor.execute("INSERT INTO note VALUES ('0','0', '0', '0')")
+        connection.commit()
+        self.db_disconnect(connection)
+
+    def startupHideAction(self):
+        self.saveRecordButton.hide()
+        self.deleteRecordButton.hide()
+        self.editRecordButton.hide()
+        self.thirdLabel.hide()
+        self.fourthLabel.hide()
+        self.recordName.hide()
+        self.recordText.hide()
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Můj milý deníčku"))
@@ -144,7 +263,8 @@ class Ui_MainWindow(object):
         self.historyComboBox.setCurrentText(_translate("MainWindow", "Vyberte z historie záznamů"))
         self.historyComboBox.setItemText(0, _translate("MainWindow", "Vyberte z historie záznamů"))
         self.refreshHistoryButton.setStatusTip(_translate("MainWindow", "Obnovit historii záznamů. Používejte pouze, pokud nemůžete najít Váš záznam."))
-        self.secondLabel.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#eeeeec;\">&nbsp;&nbsp;&nbsp;&nbsp;Nebo vytvořte nový záznam</span></p></body></html>"))
+        self.refreshHistoryButton.setText(_translate("MainWindow", "Obnovit záznamy"))
+        self.secondLabel.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#eeeeec;\">    Vytvořte nový záznam</span></p></body></html>"))
         self.firstLabel.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#eeeeec;\">&nbsp;&nbsp;&nbsp;&nbsp;Historie záznamů</span></p></body></html>"))
         self.newRecordButton.setStatusTip(_translate("MainWindow", "Vytvořte nový záznam, který se uloží do historie Vašeho deníku."))
         self.newRecordButton.setText(_translate("MainWindow", "Nový záznam"))
@@ -158,6 +278,8 @@ class Ui_MainWindow(object):
         self.editRecordButton.setToolTip(_translate("MainWindow", "Upravit Vámi zvolený záznam z historie."))
         self.editRecordButton.setStatusTip(_translate("MainWindow", "Smazat záznam z deníku. Tento krok je nevratný!"))
         self.editRecordButton.setText(_translate("MainWindow", "Upravit záznam"))
+        self.fourthLabel.setText(_translate("MainWindow", "     Název záznamu:"))
+        self.recordName.setStatusTip(_translate("MainWindow", "Zadejte jména pro Váš záznam."))
         self.actionNew.setText(_translate("MainWindow", "New"))
         self.actionNew.setStatusTip(_translate("MainWindow", "Create a new file"))
         self.actionNew.setShortcut(_translate("MainWindow", "Ctrl+N"))

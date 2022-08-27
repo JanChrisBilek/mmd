@@ -75,7 +75,7 @@ font-weight: 800</string>
      <rect>
       <x>450</x>
       <y>30</y>
-      <width>21</width>
+      <width>211</width>
       <height>21</height>
      </rect>
     </property>
@@ -83,10 +83,12 @@ font-weight: 800</string>
      <string>Obnovit historii záznamů. Používejte pouze, pokud nemůžete najít Váš záznam.</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(165, 12, 70);</string>
+     <string notr="true">background-color: rgb(165, 12, 70);
+color: rgb(238, 238, 236);
+font-weight: 800</string>
     </property>
     <property name="text">
-     <string/>
+     <string>Obnovit záznamy</string>
     </property>
     <property name="icon">
      <iconset>
@@ -107,7 +109,7 @@ font-weight: 800</string>
 font-weight: 800</string>
     </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#eeeeec;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Nebo vytvořte nový záznam&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#eeeeec;&quot;&gt;    Vytvořte nový záznam&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="firstLabel">
@@ -223,9 +225,9 @@ font-weight: 800</string>
     <property name="geometry">
      <rect>
       <x>6</x>
-      <y>143</y>
+      <y>173</y>
       <width>881</width>
-      <height>531</height>
+      <height>501</height>
      </rect>
     </property>
     <property name="font">
@@ -278,6 +280,56 @@ font-weight: 800</string>
     <property name="icon">
      <iconset>
       <normaloff>edit.png</normaloff>edit.png</iconset>
+    </property>
+   </widget>
+   <widget class="QLabel" name="fourthLabel">
+    <property name="geometry">
+     <rect>
+      <x>-7</x>
+      <y>146</y>
+      <width>141</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 236);
+background-color: rgb(117, 80, 123);</string>
+    </property>
+    <property name="text">
+     <string>     Název záznamu:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="recordName">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>146</y>
+      <width>711</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <weight>99</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="toolTip">
+     <string/>
+    </property>
+    <property name="statusTip">
+     <string>Zadejte jména pro Váš záznam.</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(238, 238, 236);
+font-weight: 800</string>
     </property>
    </widget>
   </widget>

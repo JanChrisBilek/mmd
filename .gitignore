@@ -1,0 +1,3 @@
+# Ignore DB records to avoid pubish data to GitHub
+data/db/note.db
+#
