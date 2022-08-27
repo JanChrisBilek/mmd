@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>891</width>
+    <height>703</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>891</width>
+    <height>703</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>891</width>
+    <height>703</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>11</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Můj milý deníčku</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(136, 138, 133);</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QComboBox" name="historyComboBox">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>431</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+      <weight>99</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string>Vyberte záznam z Vaší historie dle datumu a jména záznamu.</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(165, 12, 70);
+color: rgb(238, 238, 236);
+font-weight: 800</string>
+    </property>
+    <property name="currentText">
+     <string>Vyberte z historie záznamů</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>Vyberte z historie záznamů</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QPushButton" name="refreshHistoryButton">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>30</y>
+      <width>21</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="statusTip">
+     <string>Obnovit historii záznamů. Používejte pouze, pokud nemůžete najít Váš záznam.</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(165, 12, 70);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>refresh.png</normaloff>refresh.png</iconset>
+    </property>
+   </widget>
+   <widget class="QLabel" name="secondLabel">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>60</y>
+      <width>891</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(117, 80, 123);
+font-weight: 800</string>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#eeeeec;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Nebo vytvořte nový záznam&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="firstLabel">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>891</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(117, 80, 123);
+font-weight: 800</string>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#eeeeec;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Historie záznamů&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="newRecordButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>88</y>
+      <width>211</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="statusTip">
+     <string>Vytvořte nový záznam, který se uloží do historie Vašeho deníku.</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(165, 12, 70);
+color: rgb(238, 238, 236);
+font-weight: 800</string>
+    </property>
+    <property name="text">
+     <string>Nový záznam</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>plus.png</normaloff>plus.png</iconset>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="saveRecordButton">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>88</y>
+      <width>211</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="statusTip">
+     <string>Uložit deník. Posléze jej můžete naleznout v historii záznamů.</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(165, 12, 70);
+color: rgb(238, 238, 236);
+font-weight: 800</string>
+    </property>
+    <property name="text">
+     <string>Uložit záznam</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>save.png</normaloff>save.png</iconset>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="deleteRecordButton">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>88</y>
+      <width>211</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="statusTip">
+     <string>Smazat záznam z deníku. Tento krok je nevratný!</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(165, 12, 70);
+color: rgb(238, 238, 236);
+font-weight: 800</string>
+    </property>
+    <property name="text">
+     <string>Smazat záznam</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>delete.png</normaloff>delete.png</iconset>
+    </property>
+   </widget>
+   <widget class="QLabel" name="thirdLabel">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>117</y>
+      <width>891</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(117, 80, 123);
+font-weight: 800</string>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#eeeeec;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Záznam ze dne XYZ&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="recordText">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>143</y>
+      <width>881</width>
+      <height>531</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Ubuntu Condensed</family>
+      <pointsize>13</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+      <kerning>true</kerning>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string>Vložte prosím Váš text.</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(173, 127, 168);
+color: rgb(238, 238, 236);</string>
+    </property>
+    <property name="documentTitle">
+     <string/>
+    </property>
+    <property name="placeholderText">
+     <string>Místo pro Váš text ...</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="editRecordButton">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>89</y>
+      <width>211</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Upravit Vámi zvolený záznam z historie.</string>
+    </property>
+    <property name="statusTip">
+     <string>Smazat záznam z deníku. Tento krok je nevratný!</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(165, 12, 70);
+color: rgb(238, 238, 236);
+font-weight: 800</string>
+    </property>
+    <property name="text">
+     <string>Upravit záznam</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>edit.png</normaloff>edit.png</iconset>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionNew">
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="statusTip">
+    <string>Create a new file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="statusTip">
+    <string>Save a file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="statusTip">
+    <string>Exit the program</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionCopy">
+   <property name="text">
+    <string>Copy</string>
+   </property>
+   <property name="statusTip">
+    <string>Copy the file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionPaste">
+   <property name="text">
+    <string>Paste</string>
+   </property>
+   <property name="statusTip">
+    <string>Paste into the file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="savePortfolio">
+   <property name="text">
+    <string>Uložit</string>
+   </property>
+   <property name="statusTip">
+    <string>Uložit otevřené portfólio</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="exitProgram">
+   <property name="text">
+    <string>Ukončit</string>
+   </property>
+   <property name="statusTip">
+    <string>Zavřít program</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="openPortfolio">
+   <property name="text">
+    <string>Otevřít</string>
+   </property>
+   <property name="statusTip">
+    <string>Otevřít uložené portfólio</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionUlo_it">
+   <property name="text">
+    <string>Uložit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionUkon_it">
+   <property name="text">
+    <string>Ukončit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
