@@ -17,5 +17,3 @@ Stáhněte si repozitář (pomocí Git CLI nebo jako archiv). Jděte do složky 
 pip install -r data/requirement/requirements.txt
 python mmd.py
 ```
-## YouTube videoprohlídka
-[![YouTube videoprohlidka](data/img/yt.png)](https://youtu.be/ljzEhU1iBCg)
