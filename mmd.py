@@ -292,11 +292,22 @@ class Ui_MainWindow(object):
             connection = self.db_connect()
             cursor = connection.cursor()
             date = self.getSelectedRecordDate(self.historyComboBox)
+            index = self.historyComboBox.currentIndex()
             record = self.recordText.toPlainText()
             name = self.recordName.text()
             cursor.execute(f"UPDATE note SET name = '{name}', record = '{record}' WHERE date = '{date}';")
             connection.commit()
             self.db_disconnect(connection)
+            # required button and widgets actions
+            self.enableButton(self.newRecordButton).enableButton(self.editRecordButton)\
+                .enableButton(self.refreshHistoryButton).enableWidget(self.historyComboBox)
+            self.disableButton(self.saveRecordButton)
+            self.historyComboBox.clear()
+            self.historyComboBox.addItem("Vyberte z historie záznamů")
+            self.initialComboBoxLoad()
+            self.historyComboBox.setCurrentIndex(index)
+            self.setState("start")
+
 
 
     def deleteRecord(self):
@@ -304,6 +315,8 @@ class Ui_MainWindow(object):
             self.startupHideAction()
             self.enableWidget(self.historyComboBox)
             self.enableButton(self.refreshHistoryButton)
+            self.historyComboBox.setCurrentIndex(0)
+            self.enableButton(self.newRecordButton)
         if self.historyComboBox.currentIndex() > 0 and self.getState() != "edit":
             date = self.getSelectedRecordDate(self.historyComboBox)
 
