@@ -18,4 +18,4 @@ pip install -r data/requirement/requirements.txt
 python mmd.py
 ```
 ## YouTube videoprohlídka
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://youtu.be/ljzEhU1iBCg)
+[![YouTube video](data/img/yt.png)](https://youtu.be/ljzEhU1iBCg)
