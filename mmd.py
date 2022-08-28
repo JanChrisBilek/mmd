@@ -9,14 +9,23 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMessageBox
 import sqlite3
 import os.path
+import datetime
 from pathlib import Path
 
 class Ui_MainWindow(object):
     def __init__(self):
         self.script_path = os.getcwd() + "/mmd/"
-        self.tableIndex = 0
+        self.state = "start"
+
+    def getState(self):
+        return self.state
+
+    def setState(self, state):
+        self.state = state
+        return self
 
     def getTableIndex(self):
         return self.tableIndex
@@ -48,15 +57,15 @@ class Ui_MainWindow(object):
         font.setWeight(99)
         self.historyComboBox.setFont(font)
         self.historyComboBox.setStyleSheet("background-color: rgb(165, 12, 70);\n"
-"color: rgb(238, 238, 236);\n"
-"font-weight: 800")
+                                           "color: rgb(238, 238, 236);\n"
+                                           "font-weight: 800")
         self.historyComboBox.setObjectName("historyComboBox")
         self.historyComboBox.addItem("")
         self.refreshHistoryButton = QtWidgets.QPushButton(self.centralwidget)
         self.refreshHistoryButton.setGeometry(QtCore.QRect(450, 30, 211, 21))
         self.refreshHistoryButton.setStyleSheet("background-color: rgb(165, 12, 70);\n"
-"color: rgb(238, 238, 236);\n"
-"font-weight: 800")
+                                                "color: rgb(238, 238, 236);\n"
+                                                "font-weight: 800")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(f"{self.getScriptPath()}data/img/refresh.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.refreshHistoryButton.setIcon(icon)
@@ -64,18 +73,18 @@ class Ui_MainWindow(object):
         self.secondLabel = QtWidgets.QLabel(self.centralwidget)
         self.secondLabel.setGeometry(QtCore.QRect(0, 60, 891, 20))
         self.secondLabel.setStyleSheet("background-color: rgb(117, 80, 123);\n"
-"font-weight: 800")
+                                       "font-weight: 800")
         self.secondLabel.setObjectName("secondLabel")
         self.firstLabel = QtWidgets.QLabel(self.centralwidget)
         self.firstLabel.setGeometry(QtCore.QRect(0, 0, 891, 21))
         self.firstLabel.setStyleSheet("background-color: rgb(117, 80, 123);\n"
-"font-weight: 800")
+                                      "font-weight: 800")
         self.firstLabel.setObjectName("firstLabel")
         self.newRecordButton = QtWidgets.QPushButton(self.centralwidget)
         self.newRecordButton.setGeometry(QtCore.QRect(10, 88, 211, 21))
         self.newRecordButton.setStyleSheet("background-color: rgb(165, 12, 70);\n"
-"color: rgb(238, 238, 236);\n"
-"font-weight: 800")
+                                           "color: rgb(238, 238, 236);\n"
+                                           "font-weight: 800")
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(f"{self.getScriptPath()}data/img/plus.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.newRecordButton.setIcon(icon1)
@@ -83,8 +92,8 @@ class Ui_MainWindow(object):
         self.saveRecordButton = QtWidgets.QPushButton(self.centralwidget)
         self.saveRecordButton.setGeometry(QtCore.QRect(230, 88, 211, 21))
         self.saveRecordButton.setStyleSheet("background-color: rgb(165, 12, 70);\n"
-"color: rgb(238, 238, 236);\n"
-"font-weight: 800")
+                                            "color: rgb(238, 238, 236);\n"
+                                            "font-weight: 800")
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(f"{self.getScriptPath()}data/img/save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.saveRecordButton.setIcon(icon2)
@@ -92,8 +101,8 @@ class Ui_MainWindow(object):
         self.deleteRecordButton = QtWidgets.QPushButton(self.centralwidget)
         self.deleteRecordButton.setGeometry(QtCore.QRect(450, 88, 211, 21))
         self.deleteRecordButton.setStyleSheet("background-color: rgb(165, 12, 70);\n"
-"color: rgb(238, 238, 236);\n"
-"font-weight: 800")
+                                              "color: rgb(238, 238, 236);\n"
+                                              "font-weight: 800")
         icon3 = QtGui.QIcon()
         icon3.addPixmap(QtGui.QPixmap(f"{self.getScriptPath()}data/img/delete.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.deleteRecordButton.setIcon(icon3)
@@ -101,7 +110,7 @@ class Ui_MainWindow(object):
         self.thirdLabel = QtWidgets.QLabel(self.centralwidget)
         self.thirdLabel.setGeometry(QtCore.QRect(0, 117, 891, 20))
         self.thirdLabel.setStyleSheet("background-color: rgb(117, 80, 123);\n"
-"font-weight: 800")
+                                      "font-weight: 800")
         self.thirdLabel.setObjectName("thirdLabel")
         self.recordText = QtWidgets.QTextEdit(self.centralwidget)
         self.recordText.setGeometry(QtCore.QRect(6, 173, 881, 501))
@@ -114,16 +123,16 @@ class Ui_MainWindow(object):
         font.setKerning(True)
         self.recordText.setFont(font)
         self.recordText.setStyleSheet("background-color: rgb(173, 127, 168);\n"
-"color: rgb(238, 238, 236);")
+                                      "color: rgb(238, 238, 236);")
         self.recordText.setDocumentTitle("")
         self.recordText.setObjectName("recordText")
         self.editRecordButton = QtWidgets.QPushButton(self.centralwidget)
         self.editRecordButton.setGeometry(QtCore.QRect(670, 89, 211, 21))
         self.editRecordButton.setStyleSheet("background-color: rgb(165, 12, 70);\n"
-"color: rgb(238, 238, 236);\n"
-"font-weight: 800")
+                                            "color: rgb(238, 238, 236);\n"
+                                            "font-weight: 800")
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("data/img/edit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(f"{self.getScriptPath()}data/img/edit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.editRecordButton.setIcon(icon4)
         self.editRecordButton.setObjectName("editRecordButton")
         self.fourthLabel = QtWidgets.QLabel(self.centralwidget)
@@ -133,7 +142,7 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.fourthLabel.setFont(font)
         self.fourthLabel.setStyleSheet("color: rgb(238, 238, 236);\n"
-"background-color: rgb(117, 80, 123);")
+                                       "background-color: rgb(117, 80, 123);")
         self.fourthLabel.setObjectName("fourthLabel")
         self.recordName = QtWidgets.QLineEdit(self.centralwidget)
         self.recordName.setGeometry(QtCore.QRect(140, 146, 711, 20))
@@ -144,7 +153,7 @@ class Ui_MainWindow(object):
         self.recordName.setFont(font)
         self.recordName.setToolTip("")
         self.recordName.setStyleSheet("color: rgb(238, 238, 236);\n"
-"font-weight: 800")
+                                      "font-weight: 800")
         self.recordName.setObjectName("recordName")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -183,29 +192,137 @@ class Ui_MainWindow(object):
         # load items to ComboBox
         self.initialComboBoxLoad()
 
-        self.historyComboBox.activated.connect(self.do_something)
+        # map method to comboBox 'historie zaznamu' - method call on click
+        self.historyComboBox.activated.connect(self.loadHistoryRecord)
+        # map method to 'Obnovit zaznamy' button
+        self.refreshHistoryButton.clicked.connect(self.refreshButton)
+        # map method to 'Smazat zaznam'
+        self.deleteRecordButton.clicked.connect(self.clickDeleteRecord)
+        # map method to 'Novy zaznam'
+        self.newRecordButton.clicked.connect(self.newRecord)
 
-    def do_something(self):
-        print(self.historyComboBox.currentText())
+    def newRecord(self):
+        self.enableButton(self.saveRecordButton)
+        self.disableButton(self.deleteRecordButton).disableButton(self.editRecordButton)
 
+
+    def saveRecord(self):
+        date = datetime.datetime.now()
+        print(str(date.year) + "-" + str(date.strftime("%m")) + "-" + str(date.strftime("%d")) + " "
+              + str(date.strftime("%H")) + ":" + str(date.strftime("%M")) + ":" + str(date.strftime("%S")))
+
+    def clickDeleteRecord(self):
+        if self.historyComboBox.currentIndex() > 0:
+            date = self.getSelectedRecordDate(self.historyComboBox)
+
+            connect = self.db_connect()
+            cursor = connect.cursor()
+            result = cursor.execute(f"SELECT * FROM note WHERE date = \"{date}\"")
+            data = result.fetchone()
+            self.db_disconnect(connect)
+
+            msg = QMessageBox()
+            msg.setWindowTitle("Varování1")
+            msg.setText(f"Chcete odstranit záznam z deníku jménem '{data[1]}'?")
+            msg.setIcon(QMessageBox.Warning)
+            msg.setStandardButtons(QMessageBox.No | QMessageBox.Yes)
+            msg.setDefaultButton(QMessageBox.No)
+            msg.setInformativeText(f"Jedná se o záznam, který byl uložen dne {date}")
+
+            msg.buttonClicked.connect(self.popupButtonAnswer)
+
+            # show message box
+            x = msg.exec_()
+
+    def popupButtonAnswer(self, i):
+        print(i.text())
+        if i.text() == "&Yes" or i.text() == "Yes":
+            if self.historyComboBox.currentIndex() > 0:
+                date = self.getSelectedRecordDate(self.historyComboBox)
+
+                connection = self.db_connect()
+                cursor = connection.cursor()
+                cursor.execute(f"DELETE FROM note WHERE date = '{date}'")
+                connection.commit()
+                self.db_disconnect(connection)
+                self.refreshButton()
+                self.startupHideAction()
+
+    def refreshButton(self):
+        self.historyComboBox.clear()
+        self.historyComboBox.addItem("Vyberte z historie záznamů")
+        self.db_check()
+        self.initialComboBoxLoad()
+        self.startupHideAction()
+
+    def loadHistoryRecord(self):
+        if self.historyComboBox.currentIndex() > 0:
+            date = self.getSelectedRecordDate(self.historyComboBox)
+            # Show label 'zaznam ze dne XYZ'
+            self.thirdLabel.show()
+            self.thirdLabel.setText("   " + f"Záznam ze dne {date}")
+            self.thirdLabel.setStyleSheet("background-color: rgb(117, 80, 123);font-weight: 800;color: rgb(238, 238, 236);")
+            # Show delete and edit button
+            self.editRecordButton.show()
+            self.deleteRecordButton.show()
+            # Show save button as well ... but make it disabled
+            self.saveRecordButton.show()
+            self.disableButton(self.saveRecordButton)
+
+            # find DB record
+            connect = self.db_connect()
+            cursor = connect.cursor()
+            result = cursor.execute(f"SELECT * FROM note WHERE date = \"{date}\"")
+            data = result.fetchone()
+            self.db_disconnect(connect)
+
+            # Show label 'Nazev zaznamu' + 'Record name'
+            self.fourthLabel.show()
+            self.recordName.show()
+            self.disableWidget(self.recordName)
+            self.recordName.setPlaceholderText(data[1])
+
+            # Show record text
+            self.recordText.show()
+            self.recordText.setText(data[2])
+
+    def getSelectedRecordDate(self, combobox):
+        text = combobox.currentText()
+        left = text.find("[")
+        right = text.find("]")
+        date = text[left + 1:right]
+        return date
+
+    def enableButton(self, button):
+        button.setStyleSheet("background-color: rgb(165, 12, 70);"
+                             "color: rgb(238, 238, 236);\n"
+                             "font-weight: 800")
+        self.enableWidget(button)
+        return self
+
+    def disableButton(self, button):
+        button.setStyleSheet("background-color: rgb(136, 138, 133);")
+        self.disableWidget(button)
+        return self
+
+    def enableWidget(self, widget):
+        widget.setEnabled(True)
+        return self
+
+    def disableWidget(self, widget):
+        widget.setEnabled(False)
+        return self
 
     def initialComboBoxLoad(self):
         db = self.db_connect()
         cursor = db.cursor()
         records = cursor.execute("SELECT * FROM note ORDER BY date ASC")
-        # check if DB is not empty
-        if records.fetchone() is not None:
-            # temp = str(records.fetchall())
-            # print(temp)
-            # self.historyComboBox.addItem(temp)
-            records_data = records.fetchall()
-            for one_record in records_data:
-                id = one_record[0]
-                date = one_record[1]
-                name = one_record[2]
-                # record = one_record[3]
-                comboxitem = f"[{date}] {name} || {id}"
-                self.historyComboBox.addItem(comboxitem)
+        records_data = records.fetchall()
+        for one_record in records_data:
+            date = one_record[0]
+            name = one_record[1]
+            comboBoxitem = f"[{date}] {name}"
+            self.historyComboBox.addItem(comboBoxitem)
 
     def db_connect(self):
         connection = sqlite3.connect(f"{self.getScriptPath()}data/db/note.db")
@@ -237,14 +354,7 @@ class Ui_MainWindow(object):
         # https://docs.python.org/3/library/sqlite3.html
         # In order to execute SQL statements and fetch results from SQL queries, we will need to use a database cursor.
         cursor = connection.cursor()
-        cursor.execute("CREATE TABLE note "
-                       "(id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                       "date text NOT NULL, "
-                       "name text NOT NULL, "
-                       "record text NOT NULL);")
-        # null row - ignored by fetchall() method
-        cursor.execute("INSERT INTO note VALUES ('0','0', '0', '0')")
-        connection.commit()
+        cursor.execute("CREATE TABLE note (date text PRIMARY KEY, name text NOT NULL, record text NOT NULL);")
         self.db_disconnect(connection)
 
     def startupHideAction(self):
