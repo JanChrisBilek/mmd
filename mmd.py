@@ -19,7 +19,6 @@ class Ui_MainWindow(object):
     def __init__(self):
         self.script_path = os.getcwd() + "/mmd/"
         self.state = "start"
-
     def getState(self):
         return self.state
 
@@ -197,22 +196,115 @@ class Ui_MainWindow(object):
         # map method to 'Obnovit zaznamy' button
         self.refreshHistoryButton.clicked.connect(self.refreshButton)
         # map method to 'Smazat zaznam'
-        self.deleteRecordButton.clicked.connect(self.clickDeleteRecord)
+        self.deleteRecordButton.clicked.connect(self.deleteRecord)
         # map method to 'Novy zaznam'
         self.newRecordButton.clicked.connect(self.newRecord)
+        # map method to 'Ulozit zaznam'
+        self.saveRecordButton.clicked.connect(self.saveRecord)
+        # map method to 'Upravit zaznam'
+        self.editRecordButton.clicked.connect(self.editRecord)
+    def editRecord(self):
+        # Set old values for future compare
+        date = self.getSelectedRecordDate(self.historyComboBox)
+        old_name = self.recordName.placeholderText()
+        old_record = self.recordText.toPlainText()
+        # Allow edit for record name and its text
+        self.enableWidget(self.recordName).enableWidget(self.recordText).enableButton(self.saveRecordButton)
+        # set app state for 'edit' (use in save method)
+        self.setState('edit')
+        # Disable not required buttons
+        self.disableButton(self.newRecordButton).disableButton(self.editRecordButton)\
+            .disableButton(self.refreshHistoryButton).disableWidget(self.historyComboBox)
+        # set text for record name
+        self.recordName.setText(old_name)
 
     def newRecord(self):
-        self.enableButton(self.saveRecordButton)
-        self.disableButton(self.deleteRecordButton).disableButton(self.editRecordButton)
-
+        self.setState("new")
+        self.historyComboBox.setCurrentIndex(0)
+        self.saveRecordButton.show()
+        self.deleteRecordButton.show()
+        self.enableButton(self.saveRecordButton).enableButton(self.deleteRecordButton)
+        self.disableButton(self.editRecordButton).disableButton(self.refreshHistoryButton)
+        self.disableWidget(self.historyComboBox)
+        self.thirdLabel.hide()
+        # Show label 'Nazev zaznamu' + 'Record name'
+        self.fourthLabel.show()
+        self.recordName.show()
+        self.enableWidget(self.recordName)
+        self.recordName.setText("")
+        self.recordName.setPlaceholderText("")
+        # Show record text
+        self.recordText.show()
+        self.enableWidget(self.recordText)
+        self.recordText.setText("")
 
     def saveRecord(self):
-        date = datetime.datetime.now()
-        print(str(date.year) + "-" + str(date.strftime("%m")) + "-" + str(date.strftime("%d")) + " "
-              + str(date.strftime("%H")) + ":" + str(date.strftime("%M")) + ":" + str(date.strftime("%S")))
+        # Solution for saving of new record
+        if self.getState() == "new":
+            if len(self.recordName.text()) != 0 and len(self.recordText.toPlainText()) != 0:
+                date = datetime.datetime.now()
+                current_date = str(date.year) + "-" + str(date.strftime("%m")) + "-" + str(date.strftime("%d")) \
+                               + " " + str(date.strftime("%H")) + ":" + str(date.strftime("%M")) + ":" \
+                               + str(date.strftime("%S"))
+                record_name = self.recordName.text()
+                record_text = self.recordText.toPlainText()
+                print(record_name)
+                print(record_text)
+                connection = self.db_connect()
+                cursor = connection.cursor()
+                cursor.execute(f"INSERT INTO note VALUES ('{current_date}', '{record_name}', '{record_text}')")
+                connection.commit()
+                # find last added item and use him to next phase - when you save record, application state is
+                # switched to 'edit'
+                last_added = cursor.execute("SELECT * FROM note ORDER BY date DESC LIMIT 1;")
+                data = last_added.fetchone()
+                self.db_disconnect(connection)
 
-    def clickDeleteRecord(self):
-        if self.historyComboBox.currentIndex() > 0:
+                self.historyComboBox.clear()
+                self.historyComboBox.addItem("Vyberte z historie záznamů")
+                self.initialComboBoxLoad()
+                self.enableButton(self.refreshHistoryButton).enableButton(self.editRecordButton)
+                self.enableWidget(self.historyComboBox)
+                # set combobox for current index
+                index = self.historyComboBox.findText(f"[{data[0]}] {data[1]}")
+                self.historyComboBox.setCurrentIndex(index)
+                self.disableWidget(self.recordText)
+                self.editRecordButton.show()
+                date = self.getSelectedRecordDate(self.historyComboBox)
+                self.thirdLabel.show()
+                self.thirdLabel.setText("   " + f"Záznam ze dne {date}")
+                self.thirdLabel.setStyleSheet(
+                    "background-color: rgb(117, 80, 123);font-weight: 800;color: rgb(238, 238, 236);")
+                self.disableButton(self.saveRecordButton)
+                self.setState("start")
+
+            else:
+                msg = QMessageBox()
+                msg.setWindowTitle("Varování!")
+                msg.setText(f"Jméno či text jsou prázdné!")
+                msg.setIcon(QMessageBox.Warning)
+                msg.setStandardButtons(QMessageBox.Ok)
+                # show message box
+                x = msg.exec_()
+                self.setState("load")
+        elif self.getState() == "edit":
+            # compare old data and current one
+            connection = self.db_connect()
+            cursor = connection.cursor()
+            date = self.getSelectedRecordDate(self.historyComboBox)
+            record = self.recordText.toPlainText()
+            name = self.recordName.text()
+            cursor.execute(f"UPDATE note SET name = '{name}', record = '{record}' WHERE date = '{date}';")
+            connection.commit()
+            self.db_disconnect(connection)
+
+
+    def deleteRecord(self):
+        if self.getState() == "new" or self.getState() == "edit":
+            self.startupHideAction()
+            self.enableWidget(self.historyComboBox)
+            self.enableButton(self.refreshHistoryButton)
+        if self.historyComboBox.currentIndex() > 0 and self.getState() != "edit":
             date = self.getSelectedRecordDate(self.historyComboBox)
 
             connect = self.db_connect()
@@ -222,20 +314,20 @@ class Ui_MainWindow(object):
             self.db_disconnect(connect)
 
             msg = QMessageBox()
-            msg.setWindowTitle("Varování1")
+            msg.setWindowTitle("Varování!")
             msg.setText(f"Chcete odstranit záznam z deníku jménem '{data[1]}'?")
             msg.setIcon(QMessageBox.Warning)
             msg.setStandardButtons(QMessageBox.No | QMessageBox.Yes)
             msg.setDefaultButton(QMessageBox.No)
             msg.setInformativeText(f"Jedná se o záznam, který byl uložen dne {date}")
 
-            msg.buttonClicked.connect(self.popupButtonAnswer)
+            msg.buttonClicked.connect(self.deletePopupButtonAnswer)
 
             # show message box
             x = msg.exec_()
 
-    def popupButtonAnswer(self, i):
-        print(i.text())
+
+    def deletePopupButtonAnswer(self, i):
         if i.text() == "&Yes" or i.text() == "Yes":
             if self.historyComboBox.currentIndex() > 0:
                 date = self.getSelectedRecordDate(self.historyComboBox)
@@ -264,6 +356,7 @@ class Ui_MainWindow(object):
             self.thirdLabel.setStyleSheet("background-color: rgb(117, 80, 123);font-weight: 800;color: rgb(238, 238, 236);")
             # Show delete and edit button
             self.editRecordButton.show()
+            self.enableButton(self.editRecordButton)
             self.deleteRecordButton.show()
             # Show save button as well ... but make it disabled
             self.saveRecordButton.show()
@@ -279,7 +372,7 @@ class Ui_MainWindow(object):
             # Show label 'Nazev zaznamu' + 'Record name'
             self.fourthLabel.show()
             self.recordName.show()
-            self.disableWidget(self.recordName)
+            self.disableWidget(self.recordName).disableWidget(self.recordText)
             self.recordName.setPlaceholderText(data[1])
 
             # Show record text
